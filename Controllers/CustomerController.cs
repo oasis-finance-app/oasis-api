@@ -67,7 +67,7 @@ namespace Oasis.API.Controllers
       _context.Customers.Add(customer);
       await _context.SaveChangesAsync();
 
-      return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
+      return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
     }
 
     [HttpGet("{id}")]
@@ -83,16 +83,16 @@ namespace Oasis.API.Controllers
       return customer;
     }
 
-    private string GenerateJwtToken(Customer costumer)
+    private string GenerateJwtToken(Customer customer)
     {
       var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("1c00a1c21bab75249256cfbe41192cd7"));
       var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
       var claims = new[]
       {
-          new Claim(JwtRegisteredClaimNames.Sub, costumer.Email),
+          new Claim(JwtRegisteredClaimNames.Sub, customer.Email),
           new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-          new Claim("id", costumer.Id.ToString())
+          new Claim("id", customer.CustomerId.ToString())
       };
 
       var token = new JwtSecurityToken(

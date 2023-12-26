@@ -11,15 +11,15 @@ namespace Oasis.Models
 	public class Customer
 	{
 		[Key]
-		public int Id { get; set; }
-
-		[Required]
-		[EmailAddress]
-		public required string Email { get; set; }
+		public int CustomerId { get; set; }
 
 		[Required]
 		[StringLength(100, MinimumLength = 6)]
 		public required string Name { get; set; }
+
+		[Required]
+		[EmailAddress]
+		public required string Email { get; set; }
 
 		[Required]
 		[DataType(DataType.Password)]

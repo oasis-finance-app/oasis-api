@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<EntityContext>(options =>
-	options.UseSqlite($"Data Source=oasis"));
+	options.UseNpgsql("Host=localhost:5432;Database=oasis_dev;Username=postgres;Password=root"));
 
 var app = builder.Build();
 
