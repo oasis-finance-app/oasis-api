@@ -1,25 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Patrick\\Desktop\\oasis-api\\Oasis.csproj": {}
+    "C:\\Users\\patri\\Desktop\\oasis-api\\Oasis.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Patrick\\Desktop\\oasis-api\\Oasis.csproj": {
+    "C:\\Users\\patri\\Desktop\\oasis-api\\Oasis.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Patrick\\Desktop\\oasis-api\\Oasis.csproj",
+        "projectUniqueName": "C:\\Users\\patri\\Desktop\\oasis-api\\Oasis.csproj",
         "projectName": "Oasis",
-        "projectPath": "C:\\Users\\Patrick\\Desktop\\oasis-api\\Oasis.csproj",
-        "packagesPath": "C:\\Users\\Patrick\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Patrick\\Desktop\\oasis-api\\obj\\",
+        "projectPath": "C:\\Users\\patri\\Desktop\\oasis-api\\Oasis.csproj",
+        "packagesPath": "C:\\Users\\patri\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\patri\\Desktop\\oasis-api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Patrick\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\patri\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

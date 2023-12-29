@@ -275,3 +275,4 @@ C:\Users\Patrick\Desktop\oasis-api\obj\Debug\net8.0\refint\Oasis.dll
 C:\Users\Patrick\Desktop\oasis-api\obj\Debug\net8.0\Oasis.pdb
 C:\Users\Patrick\Desktop\oasis-api\obj\Debug\net8.0\Oasis.genruntimeconfig.cache
 C:\Users\Patrick\Desktop\oasis-api\obj\Debug\net8.0\ref\Oasis.dll
+C:\Users\patri\Desktop\Oasis\obj\Debug\net8.0\Oasis.sourcelink.json

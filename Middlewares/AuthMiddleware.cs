@@ -27,7 +27,7 @@ public class AuthMiddleware
     try
     {
       var tokenHandler = new JwtSecurityTokenHandler();
-      var key = Encoding.ASCII.GetBytes("your_secret_key");
+      var key = Encoding.UTF8.GetBytes("1c00a1c21bab75249256cfbe41192cd7");
       tokenHandler.ValidateToken(token, new TokenValidationParameters
       {
         ValidateIssuerSigningKey = true,
@@ -42,8 +42,9 @@ public class AuthMiddleware
 
       context.Items["Customer"] = dbContext.Customers.Find(customerId);
     }
-    catch
+    catch (Exception e)
     {
+      Console.WriteLine(e);
     }
   }
 }

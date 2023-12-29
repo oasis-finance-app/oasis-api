@@ -12,7 +12,7 @@ using Oasis.Context;
 namespace Oasis.Migrations
 {
     [DbContext(typeof(EntityContext))]
-    [Migration("20231221021358_InitialCreate")]
+    [Migration("20231227002647_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -44,8 +44,8 @@ namespace Oasis.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("OtherBankName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("BankAccountId");
 
@@ -56,11 +56,11 @@ namespace Oasis.Migrations
 
             modelBuilder.Entity("Oasis.Models.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CustomerId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -75,7 +75,7 @@ namespace Oasis.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("CustomerId");
 
                     b.ToTable("Customers");
                 });

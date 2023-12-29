@@ -96,8 +96,8 @@ namespace Oasis.API.Controllers
       };
 
       var token = new JwtSecurityToken(
-          // issuer: "localhost",
-          // audience: "localhost",
+          issuer: "localhost",
+          audience: "localhost",
           claims: claims,
           expires: DateTime.Now.AddDays(7),
           signingCredentials: credentials

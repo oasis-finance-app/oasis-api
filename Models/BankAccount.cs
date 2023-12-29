@@ -9,7 +9,7 @@ using Oasis.Enums;
 
 namespace Oasis.Models
 {
-    public class BankAccount
+	public class BankAccount
 	{
 		[Key]
 		public int BankAccountId { get; set; }
@@ -20,12 +20,12 @@ namespace Oasis.Models
 		[Required]
 		public BankName Bank { get; set; }
 
-		[StringLength(100)]
+    [Required(AllowEmptyStrings = true)]
 		public string? OtherBankName { get; set; }
 		
 		public int CustomerId { get; set; }
 		public required Customer Customer { get; set; }
 
 		public List<Transaction>? Transactions { get; set; }
-	}
+  }
 }

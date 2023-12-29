@@ -16,6 +16,15 @@ public class EntityContext : DbContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		
+		modelBuilder.Entity<Customer>(entity =>
+		{
+			entity.HasKey(e => e.CustomerId);
+			entity.Property(e => e.CustomerId).ValueGeneratedOnAdd();
+
+			entity.HasMany(c => c.BankAccounts)
+					.WithOne(ba => ba.Customer)
+					.HasForeignKey(ba => ba.CustomerId);
+		});
 	}
+
 }
