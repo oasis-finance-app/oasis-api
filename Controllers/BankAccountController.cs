@@ -1,10 +1,12 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oasis.Context;
+using Oasis.DTOs;
 using Oasis.Models;
 
-namespace Oasis.API.Controllers
+namespace Oasis.Controllers
 {
   [Authorize]
   [Route("api/[controller]")]
@@ -22,8 +24,7 @@ namespace Oasis.API.Controllers
     [HttpGet]
     public ActionResult Get()
     {
-      var customer = HttpContext.Items["Customer"] as Customer;
-      if (customer == null)
+      if (HttpContext.Items["Customer"] is not Customer customer)
       {
         return NotFound("Cliente não encontrado.");
       }
@@ -85,32 +86,4 @@ namespace Oasis.API.Controllers
     }
 
   }
-}
-public class BankAccountCreateDto
-{
-
-  [Required]
-  public string AccountName { get; set; }
-
-  [Required]
-  public int Bank { get; set; }
-
-  public string OtherBankName { get; set; }
-}
-
-public class BankAccountResponseDto
-{
-  public int BankAccountId { get; set; }
-  public string AccountName { get; set; }
-  public Oasis.Enums.BankName Bank { get; set; }
-  public string OtherBankName { get; set; }
-}
-
-public class BankAccountDto
-{
-    public int BankAccountId { get; set; }
-    public string AccountName { get; set; }
-    public int Bank { get; set; }
-    public string OtherBankName { get; set; }
-    public int CustomerId { get; set; }
 }
