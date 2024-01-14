@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
-using Oasis.Models;
-using Oasis.Context;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,6 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel;
+using Oasis.Models;
+using Oasis.Context;
+using Oasis.DTOs;
 
 namespace Oasis.API.Controllers
 {
@@ -24,7 +26,7 @@ namespace Oasis.API.Controllers
     }
 
     [HttpPost("sign-in")]
-    public async Task<ActionResult> Login(CustomerLoginDto loginDto)
+    public async Task<ActionResult> Login(CustomerSignInDto loginDto)
     {
       var Customer = await _context.Customers.FirstOrDefaultAsync(c => c.Email == loginDto.Email);
 
@@ -106,15 +108,4 @@ namespace Oasis.API.Controllers
       return new JwtSecurityTokenHandler().WriteToken(token);
     }
   }
-}
-
-public class CustomerLoginDto
-{
-    [Required]
-    [EmailAddress]
-    public required string Email { get; set; }
-
-    [Required]
-    [DataType(DataType.Password)]
-    public required string Password { get; set; }
 }
