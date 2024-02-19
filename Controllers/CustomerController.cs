@@ -12,7 +12,7 @@ using Oasis.Models;
 using Oasis.Context;
 using Oasis.DTOs;
 
-namespace Oasis.API.Controllers
+namespace Oasis.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
@@ -44,7 +44,13 @@ namespace Oasis.API.Controllers
       }
 
       var token = GenerateJwtToken(Customer);
-      return Ok(new { token });
+      return Ok(
+        new
+        {
+          Customer,
+          token
+        }
+        );
     }
 
     [HttpPost("sign-up")]
@@ -57,7 +63,7 @@ namespace Oasis.API.Controllers
 
       var hasher = new PasswordHasher<Customer>();
 
-      var customer = new Customer 
+      var customer = new Customer
       {
         Email = signUpDto.Email,
         Name = signUpDto.Name,
@@ -94,12 +100,11 @@ namespace Oasis.API.Controllers
       {
           new Claim(JwtRegisteredClaimNames.Sub, customer.Email),
           new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-          new Claim("id", customer.CustomerId.ToString())
+          new Claim("id", customer.CustomerId.ToString()),
+          new Claim("name", customer.Name),
       };
 
       var token = new JwtSecurityToken(
-          issuer: "localhost",
-          audience: "localhost",
           claims: claims,
           expires: DateTime.Now.AddDays(7),
           signingCredentials: credentials
