@@ -4,23 +4,28 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Oasis.Context;
 using System.Text;
+using System.Text.Json.Serialization;
+using Oasis.Seed;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers()
+	.AddJsonOptions(
+		options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+	);
 
 builder.Services.AddCors(options =>
 {
-	options.AddPolicy(name: MyAllowSpecificOrigins,
+	options.AddDefaultPolicy(
 	policy =>
 	{
-		policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+		policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
 	});
 });
+builder.Services.AddDbContext<EntityContext>(options =>
+	options.UseNpgsql("Host=localhost:5432;Database=oasis_dev;Username=postgres;Password=root"));
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-	options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -50,8 +55,6 @@ builder.Services.AddSwaggerGen(options =>
 				}
 		});
 });
-builder.Services.AddDbContext<EntityContext>(options =>
-	options.UseNpgsql("Host=localhost:5432;Database=oasis_dev;Username=postgres;Password=root"));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options =>
@@ -68,6 +71,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 var app = builder.Build();
+app.UseCors();
 
 if (app.Environment.IsDevelopment())
 {
@@ -75,14 +79,15 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-app.UseCors(MyAllowSpecificOrigins);
-
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 app.UseMiddleware<AuthMiddleware>();
+
+DbInitializer.Initialize(app.Services);
 
 app.MapControllers();
 

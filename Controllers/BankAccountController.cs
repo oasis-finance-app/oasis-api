@@ -1,89 +1,71 @@
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Oasis.Context;
 using Oasis.DTOs;
 using Oasis.Models;
 
-namespace Oasis.Controllers
+namespace Oasis.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class BankAccountController(EntityContext context) : ControllerBase
 {
-  [Authorize]
-  [Route("api/[controller]")]
-  [ApiController]
 
-  public class BankAccountController : ControllerBase
-  {
-    private readonly EntityContext _context;
+	[HttpGet]
+	public ActionResult Get()
+	{
+		var customer = HttpContext.Items["Customer"] as Customer;
+		if (customer == null)
+		{
+			return NotFound("Cliente não encontrado.");
+		}
 
-    public BankAccountController(EntityContext context)
-    {
-      _context = context;
-    }
+		var bankAccounts = context.BankAccounts
+			.Include(ba => ba.Bank)
+			.Where(ba => ba.CustomerId == customer.CustomerId)
+			.Select(ba => new
+			{
+				AccountName = ba.AccountName,
+				BankName = ba.Bank.Name,
+				OtherBankName = ba.OtherBankName
+			})
+			.ToList();
 
-    [HttpGet]
-    public ActionResult Get()
-    {
-      if (HttpContext.Items["Customer"] is not Customer customer)
-      {
-        return NotFound("Cliente não encontrado.");
-      }
+		return Ok(bankAccounts);
+	}
 
-      var bankAccounts = _context.BankAccounts
-        .Where(ba => ba.CustomerId == customer.CustomerId)
-        .Select(ba => new BankAccountDto
-        {
-            BankAccountId = ba.BankAccountId,
-            AccountName = ba.AccountName,
-            Bank = (int)ba.Bank,
-            OtherBankName = ba.OtherBankName,
-            CustomerId = ba.CustomerId
-        })
-        .ToList();
-      return Ok(bankAccounts);
-    }
+	[HttpPost]
+	public ActionResult Post([FromBody] BankAccountDto bankAccountDto)
+	{
+		if (!ModelState.IsValid)
+		{
+			return BadRequest(ModelState);
+		}
 
-    [HttpGet("{id}")]
-    public ActionResult Get(int id)
-    {
-      var bankAccount = _context.BankAccounts.Find(id);
-      if (bankAccount == null)
-      {
-        return NotFound();
-      }
+		var customer = HttpContext.Items["Customer"] as Customer;
+		if (customer == null)
+		{
+			return NotFound("Cliente não encontrado.");
+		}
 
-      var responseDto = new BankAccountResponseDto
-      {
-        BankAccountId = bankAccount.BankAccountId,
-        AccountName = bankAccount.AccountName,
-        Bank = bankAccount.Bank,
-        OtherBankName = bankAccount.OtherBankName
-      };
+		var bankAccount = new BankAccount
+		{
+			AccountName = bankAccountDto.AccountName,
+			OtherBankName = bankAccountDto.OtherBankName,
+			BankId = bankAccountDto.BankId,
+			CustomerId = customer.CustomerId,
+		};
 
-      return Ok(responseDto);
-    }
-
-    [HttpPost]
-    public ActionResult Post([FromBody] BankAccountCreateDto bankAccountDto)
-    {
-      var customer = HttpContext.Items["Customer"] as Customer;
-      if (customer == null)
-      {
-        return NotFound("Cliente não encontrado.");
-      }
-
-      var bankAccount = new BankAccount
-      {
-        AccountName = bankAccountDto.AccountName,
-        Bank = (Enums.BankName)bankAccountDto.Bank,
-        OtherBankName = bankAccountDto.OtherBankName,
-        Customer = customer
-      };
-
-      _context.BankAccounts.Add(bankAccount);
-      _context.SaveChanges();
-      return CreatedAtAction(nameof(Get), new { id = bankAccount.BankAccountId }, bankAccount);
-    }
-
-  }
+		try
+		{
+			context.BankAccounts.Add(bankAccount);
+			context.SaveChanges();
+			return Ok("Conta bancária adicionada com sucesso.");
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
 }
