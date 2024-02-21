@@ -1,31 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
+﻿using System.ComponentModel.DataAnnotations;
 using Oasis.Enums;
 
 namespace Oasis.Models
 {
+	public class Bank
+	{
+		public int BankId { get; set; }
+		public string Name { get; set; }
+	}
+
 	public class BankAccount
 	{
 		[Key]
 		public int BankAccountId { get; set; }
 
 		[Required]
-		public required string AccountName { get; set; }
+		public string AccountName { get; set; }
 
 		[Required]
-		public BankName Bank { get; set; }
+		public int BankId { get; set; }
+		public Bank? Bank { get; set; }
 
-    [Required(AllowEmptyStrings = true)]
 		public string? OtherBankName { get; set; }
-		
-		public int CustomerId { get; set; }
-		public required Customer Customer { get; set; }
 
-		public List<Transaction>? Transactions { get; set; }
-  }
+		[Required]
+		public AccountType AccountType { get; set; }
+
+		[Required]
+		public int CustomerId { get; set; }
+		public Customer Customer { get; set; } = null!;
+
+		public List<Transaction> Transactions { get; set; }
+	}
 }
